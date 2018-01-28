@@ -11,6 +11,7 @@ import net2.relogo.Packet;
 public class TurtleMessageSender<E extends ReLogoTurtle> implements MessageSender {
 	private final Resolver<E> resolver;
 	private final String dstEndpoint;
+    private MessageReceiver onReceive;
 
 	private final ConcurrentHashMap<Long, E> resolvedTurtles = new ConcurrentHashMap<>();
 	private final Random random = new Random();
@@ -36,5 +37,15 @@ public class TurtleMessageSender<E extends ReLogoTurtle> implements MessageSende
 	@FunctionalInterface
 	public interface Resolver<E extends ReLogoTurtle> {
 		E resolve(long id);
+	}
+
+	@Override
+	public void receive(long src, long dst, Object msg) {
+        if (null != this.onReceive) onReceive.apply(src, dst, msg);
+	}
+
+	@Override
+	public void onReceive(MessageReceiver receiver) {
+        this.onReceive = receiver;
 	}
 }

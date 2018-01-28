@@ -73,7 +73,7 @@ class Packet extends ReLogoTurtle {
 			} else if (ttl == 0) {
 				moveTo(dst)
 				color = red()
-				dst."$endpoint"(payload)
+				dst."$endpoint"(src, dst, payload)
 			} else if (ttl < -5) {
 				die()
 			}

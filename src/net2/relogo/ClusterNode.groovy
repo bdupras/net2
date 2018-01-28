@@ -6,7 +6,6 @@ import static net2.relogo.Utils.*
 import static com.duprasville.limiters.util.Utils.*
 
 import com.duprasville.limiters.RateLimiters
-import com.duprasville.limiters.comms.Communicator
 import com.duprasville.limiters.comms.MessageSender
 import com.duprasville.limiters.treefill.TreeFillRateLimiter
 import com.duprasville.limiters.RateLimiter
@@ -14,7 +13,6 @@ import com.duprasville.limiters.util.karytree.KaryLayout
 import com.duprasville.limiters.util.karytree.KaryTree
 import com.google.common.util.concurrent.ForkedRateLimiter
 import net2.ReLogoTurtle
-import net2.comms.AgentCommunicator
 import net2.comms.TurtleMessageSender
 import repast.simphony.relogo.AgentSet
 import repast.simphony.relogo.UtilityG
@@ -49,6 +47,16 @@ class ClusterNode extends ReLogoTurtle {
 		]
 	}
 
+	def clusterNodeResolver = { long resolveId ->
+		clusterNodes().with() { ClusterNode clusterNode ->
+			clusterNode.clusterId == resolveId
+		}.first()
+	}
+
+	TurtleMessageSender<ClusterNode> clusterNodeMessageSender = new TurtleMessageSender<>("treefillMessage", clusterNodeResolver);
+	public treefillMessage(ClusterNode src, ClusterNode dst, Object msg) {
+		clusterNodeMessageSender.receive(src.clusterId, dst.clusterId, msg)
+	}
 
 	@Setup
 	def setup() {
@@ -57,8 +65,7 @@ class ClusterNode extends ReLogoTurtle {
 		size = getRelSize()
 
 		long parentId = tree.parentOfNode(clusterId)
-		parent = clusterNodes().with {
-			ClusterNode cn ->
+		parent = clusterNodes().with { ClusterNode cn ->
 			parentId == cn.clusterId
 		}
 
@@ -77,18 +84,11 @@ class ClusterNode extends ReLogoTurtle {
 		//		int myShare = spread(clusterId, clusterQuota, clusterSize)
 		//		limiter = myShare > 0 ? ForkedRateLimiter.create(myShare, RELOGO_TICKER) : RateLimiters.NEVER;
 
-		def clusterNodeResolver = { long resolveId ->
-			clusterNodes().with() {
-				ClusterNode clusterNode ->
-				clusterNode.clusterId == resolveId
-			}.first()
-		}
-		
-		TurtleMessageSender<ClusterNode> clusterNodeMessageSender = new TurtleMessageSender<>("treefillMessage", clusterNodeResolver);
 		int myShare = spread(clusterId, clusterQuota, clusterSize)
 
 		limiter = myShare <= 0 ? RateLimiters.NEVER : new TreeFillRateLimiter(myShare, clusterId, clusterSize, tree, clusterNodeMessageSender)
 	}
+
 
 	boolean previouslyRateLimited = false
 	public boolean tryAcquire(int itemsRequested) {
@@ -103,10 +103,6 @@ class ClusterNode extends ReLogoTurtle {
 
 		color = ret ? green() : orange()
 		ret
-	}
-	
-	public treefillMessage(payload) {
-		show(["treefillMessage", payload])
 	}
 
 	//	@Go(start=1d, interval=30d, pick=10l, shuffle=true)
