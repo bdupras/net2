@@ -1,20 +1,17 @@
 package net2.relogo
 
+import static com.duprasville.limiters.util.Utils.*
+import static net2.relogo.Utils.*
 import static repast.simphony.relogo.Utility.*
 import static repast.simphony.relogo.UtilityG.*
-import static net2.relogo.Utils.*
 
+import java.util.concurrent.atomic.AtomicInteger
+
+import net2.ReLogoObserver
 import repast.simphony.relogo.AgentSet
-import repast.simphony.relogo.Stop
-import repast.simphony.relogo.Utility
-import repast.simphony.relogo.UtilityG
 import repast.simphony.relogo.factories.RLWorldDimensions
 import repast.simphony.relogo.schedule.Go
 import repast.simphony.relogo.schedule.Setup
-import net2.ReLogoObserver
-import repast.simphony.runtime.RepastMain
-import java.util.concurrent.atomic.AtomicInteger
-import com.google.common.util.concurrent.RateLimiter
 
 /**
  * TODO LIST
@@ -55,7 +52,7 @@ class UserObserver extends ReLogoObserver{
 
 	@Go
 	def go(){
-		int requestsToSend = spread(getTickCount(), clientRps, ONE_SECOND)
+		int requestsToSend = spread(getTickCount(), (long)clientRps, (long)ONE_SECOND)
 		sendRequests(requestsToSend, clientIpr, nOf(requestsToSend, clusterNodes()))
 		speedLimit(simulationMaxTps)
 	}

@@ -6,11 +6,10 @@ import static repast.simphony.relogo.UtilityG.*
 import org.jscience.physics.amount.Amount
 
 import com.google.common.base.Ticker
+import com.google.common.util.concurrent.ForkedRateLimiter
 
 import repast.simphony.engine.environment.RunEnvironment
 import repast.simphony.engine.schedule.Schedule
-
-import com.google.common.util.concurrent.RateLimiter
 
 class Utils {
 	public static long getTickCount() {
@@ -39,7 +38,7 @@ class Utils {
 		}
 	};
 
-	private static RateLimiter simRateLimiter = RateLimiter.create(1_000);
+	private static ForkedRateLimiter simRateLimiter = ForkedRateLimiter.create(1_000);
 	
 	public static void speedLimit(int ticksPerSecond) {
 		switch (ticksPerSecond) {
@@ -56,28 +55,28 @@ class Utils {
 		}
 	}
 
-	/**
-	 * Useful for calculating a single position's fair share of a whole, e.g. 
-	 *   - requests per a given mSec when defined in requests per second
-	 *   - quota per a given node when defined in quota per cluster
-	 * Shares must be whole numbers. Accounts for fractional shares by
-	 * allocating an extra share to some positions. 
-	 */
-	static int spread(long thisPosition, long units, long perPositions) {
-		int half = perPositions / 2;
-		int whole = units / perPositions;
-		int rem = units % perPositions;
-		if (rem == 0) {
-			return whole;
-		} else if (rem < half) {
-			return (0 == thisPosition.mod(perPositions.intdiv(rem))) ? whole + 1 : whole;
-		} else {
-			return (0 == thisPosition.mod(perPositions.intdiv(perPositions - rem))) ? whole : whole + 1;
-		}
-	}
-	
-	public static String LIMIT_NONE = "none" 
-	public static String LIMIT_NON_COOPERATIVE = "non-cooperative optimistic"
-	public static String LIMIT_CENTRALIZED = "centralized/memcahced (not impl)"
-	public static String LIMIT_TREEFILL = "treefill (not impl)"
+//	/**
+//	 * Useful for calculating a single position's fair share of a whole, e.g. 
+//	 *   - requests per a given mSec when defined in requests per second
+//	 *   - quota per a given node when defined in quota per cluster
+//	 * Shares must be whole numbers. Accounts for fractional shares by
+//	 * allocating an extra share to some positions. 
+//	 */
+//	static int spread(long thisPosition, long units, long perPositions) {
+//		int half = perPositions / 2;
+//		int whole = units / perPositions;
+//		int rem = units % perPositions;
+//		if (rem == 0) {
+//			return whole;
+//		} else if (rem < half) {
+//			return (0 == thisPosition.mod(perPositions.intdiv(rem))) ? whole + 1 : whole;
+//		} else {
+//			return (0 == thisPosition.mod(perPositions.intdiv(perPositions - rem))) ? whole : whole + 1;
+//		}
+//	}
+//	
+//	public static String LIMIT_NONE = "none" 
+//	public static String LIMIT_NON_COOPERATIVE = "non-cooperative optimistic"
+//	public static String LIMIT_CENTRALIZED = "centralized/memcahced (not impl)"
+//	public static String LIMIT_TREEFILL = "treefill (not impl)"
 }
