@@ -862,5 +862,110 @@ public class ReLogoPatch extends BasePatch{
 		return userLink(oneEnd.getWho(), otherEnd.getWho());
 	}
 
+	/**
+	 * Returns the value of the global variable simulationMaxTps.
+	 *
+	 * @return the value of the global variable simulationMaxTps
+	 */
+	@ReLogoBuilderGeneratedFor("global: simulationMaxTps")
+	public Object getSimulationMaxTps(){
+		return repast.simphony.relogo.ReLogoModel.getInstance().getModelParam("simulationMaxTps");
+	}
+
+	/**
+	 * Sets the value of the global variable simulationMaxTps.
+	 *
+	 * @param value
+	 *            a value
+	 */
+	@ReLogoBuilderGeneratedFor("global: simulationMaxTps")
+	public void setSimulationMaxTps(Object value){
+		repast.simphony.relogo.ReLogoModel.getInstance().setModelParam("simulationMaxTps",value);
+	}
+
+	/**
+	 * Returns the value of the global variable limitStrategy.
+	 *
+	 * @return the value of the global variable limitStrategy
+	 */
+	@ReLogoBuilderGeneratedFor("global: limitStrategy")
+	public Object getLimitStrategy(){
+		return repast.simphony.relogo.ReLogoModel.getInstance().getModelParam("limitStrategy");
+	}
+
+	/**
+	 * Sets the value of the global variable limitStrategy.
+	 *
+	 * @param value
+	 *            a value
+	 */
+	@ReLogoBuilderGeneratedFor("global: limitStrategy")
+	public void setLimitStrategy(Object value){
+		repast.simphony.relogo.ReLogoModel.getInstance().setModelParam("limitStrategy",value);
+	}
+
+	/**
+	 * Returns the value of the global variable clientRps.
+	 *
+	 * @return the value of the global variable clientRps
+	 */
+	@ReLogoBuilderGeneratedFor("global: clientRps")
+	public Object getClientRps(){
+		return repast.simphony.relogo.ReLogoModel.getInstance().getModelParam("clientRps");
+	}
+
+	/**
+	 * Sets the value of the global variable clientRps.
+	 *
+	 * @param value
+	 *            a value
+	 */
+	@ReLogoBuilderGeneratedFor("global: clientRps")
+	public void setClientRps(Object value){
+		repast.simphony.relogo.ReLogoModel.getInstance().setModelParam("clientRps",value);
+	}
+
+	/**
+	 * Returns the value of the global variable clientIpr.
+	 *
+	 * @return the value of the global variable clientIpr
+	 */
+	@ReLogoBuilderGeneratedFor("global: clientIpr")
+	public Object getClientIpr(){
+		return repast.simphony.relogo.ReLogoModel.getInstance().getModelParam("clientIpr");
+	}
+
+	/**
+	 * Sets the value of the global variable clientIpr.
+	 *
+	 * @param value
+	 *            a value
+	 */
+	@ReLogoBuilderGeneratedFor("global: clientIpr")
+	public void setClientIpr(Object value){
+		repast.simphony.relogo.ReLogoModel.getInstance().setModelParam("clientIpr",value);
+	}
+
+	/**
+	 * Returns the value of the global variable clusterQuota.
+	 *
+	 * @return the value of the global variable clusterQuota
+	 */
+	@ReLogoBuilderGeneratedFor("global: clusterQuota")
+	public Object getClusterQuota(){
+		return repast.simphony.relogo.ReLogoModel.getInstance().getModelParam("clusterQuota");
+	}
+
+	/**
+	 * Sets the value of the global variable clusterQuota.
+	 *
+	 * @param value
+	 *            a value
+	 */
+	@ReLogoBuilderGeneratedFor("global: clusterQuota")
+	public void setClusterQuota(Object value){
+		repast.simphony.relogo.ReLogoModel.getInstance().setModelParam("clusterQuota",value);
+	}
+
 
 }

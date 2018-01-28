@@ -2,18 +2,16 @@ package net2.relogo
 
 import static repast.simphony.relogo.Utility.*
 import static repast.simphony.relogo.UtilityG.*
+import static net2.relogo.Utils.*
 
+import com.google.common.util.concurrent.ForkedRateLimiter
 import net2.ReLogoTurtle
-import net2.relogo.KaryTree
+import net2.karytree.KaryLayout
+import net2.karytree.KaryTree
 import repast.simphony.relogo.AgentSet
-import repast.simphony.relogo.Plural
-import repast.simphony.relogo.Stop
-import repast.simphony.relogo.Utility
 import repast.simphony.relogo.UtilityG
-import repast.simphony.relogo.factories.RLWorldDimensions
 import repast.simphony.relogo.schedule.Go
 import repast.simphony.relogo.schedule.Setup
-import repast.simphony.relogo.Turtle
 
 class ClusterNode extends ReLogoTurtle {
 	private long clusterId = -1
@@ -23,6 +21,7 @@ class ClusterNode extends ReLogoTurtle {
 	private AgentSet<ClusterNode> parent = null
 	private AgentSet<ClusterNode> children = null
 	private AgentSet<ClusterNode> base = null
+	private ForkedRateLimiter limiter = null
 
 	public void clusterInit(int clusterId, int clusterSize) {
 		this.clusterId = clusterId
@@ -41,6 +40,7 @@ class ClusterNode extends ReLogoTurtle {
 			layout.relY(clusterId)
 		]
 	}
+
 
 	@Setup
 	def setup() {
@@ -65,6 +65,24 @@ class ClusterNode extends ReLogoTurtle {
 		base = clusterNodes().with { ClusterNode cn ->
 			(minBase <= cn.clusterId) && (cn.clusterId <= maxBase)
 		}
+
+		int myShare = spread(clusterId, clusterQuota, clusterSize)
+		limiter = myShare > 0 ? ForkedRateLimiter.create(myShare, RELOGO_TICKER) : ForkedRateLimiter.ALWAYS_REJECT;
+	}
+
+	boolean previouslyRateLimited = false
+	public boolean tryAcquire(int itemsRequested) {
+		boolean ret
+		if (previouslyRateLimited) {
+			ret = limiter.tryAcquire(itemsRequested)
+			previouslyRateLimited = !ret
+		} else {
+			ret = true
+			previouslyRateLimited = !limiter.tryAcquire(itemsRequested)
+		}
+
+		color = ret ? green() : orange()
+		ret
 	}
 
 	@Go(start=1d, interval=30d, pick=10l, shuffle=true)
@@ -76,9 +94,6 @@ class ClusterNode extends ReLogoTurtle {
 		dsts.each { ClusterNode dst ->
 			sendHello(dst, replyTo, msg)
 		}
-//		ask(dsts) { ClusterNode dst ->
-//			this.sendHello(dst, replyTo, msg)
-//		}
 	}
 
 	def sendHello(ClusterNode dst, ClusterNode replyTo, String msg) {

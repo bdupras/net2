@@ -1,4 +1,4 @@
-package net2.relogo;
+package net2.karytree;
 
 public class KaryLayout {
     private final KaryTree karyTree;
@@ -21,6 +21,6 @@ public class KaryLayout {
     }
 
     public double relSize(long id) {
-    		return Math.max(0.05, 1.0 - (1.0 * relY(id))); 
+    		return Math.max(0.1, 1.0 - (1.0 * relY(id))); 
     }
 }

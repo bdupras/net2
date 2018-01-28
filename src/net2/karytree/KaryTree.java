@@ -1,4 +1,4 @@
-package net2.relogo;
+package net2.karytree;
 
 
 /*
@@ -125,7 +125,7 @@ public class KaryTree {
         return (int) (Math.log(n) / Math.log(base));
     }
 
-    class Range<T> {
+    public class Range<T> {
         private final T min;
 
         private final T max;
@@ -149,7 +149,7 @@ public class KaryTree {
         }
     }
 
-    class Level {
+    public class Level {
         private final int id;
 
         public Level(int id) {
@@ -179,7 +179,7 @@ public class KaryTree {
         }
     }
 
-    class Node {
+    public class Node {
         private final long id;
 
         Node(long id) {

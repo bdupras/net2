@@ -63,7 +63,6 @@ class Packet extends ReLogoTurtle {
 		shape = "circle"
 	}
 
-	boolean pausedOnce = false
 	private step() {
 		if (sent && dst != null) {
 			def now = getTickCount()
@@ -78,14 +77,10 @@ class Packet extends ReLogoTurtle {
 			} else if (ttl < -5) {
 				die()
 			}
-			if ((src.clusterId > dst.clusterId==99) && !pausedOnce) {
-				pause()
-				pausedOnce = true
-			}
 		}
 	}
 
-	@Go
+	@Go(interval=1d, shuffle=true)
 	def go() {
 		step()
 	}
