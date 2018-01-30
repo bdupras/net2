@@ -5,9 +5,9 @@ import static repast.simphony.relogo.UtilityG.*
 import static net2.relogo.Utils.*
 import static com.duprasville.limiters.util.Utils.*
 
-import com.duprasville.limiters.RateLimiters
-import com.duprasville.limiters.treefill.TreeFillRateLimiter
-import com.duprasville.limiters.RateLimiter
+import com.duprasville.limiters.ClusterRateLimiters
+import com.duprasville.limiters.treefill.TreeFillClusterRateLimiter
+import com.duprasville.limiters.ClusterRateLimiter
 import com.duprasville.limiters.util.karytree.KaryLayout
 import com.duprasville.limiters.util.karytree.KaryTree
 import com.duprasville.limiters.comms.Message
@@ -28,7 +28,7 @@ class ClusterNode extends ReLogoTurtle {
 	private AgentSet<ClusterNode> parent = null
 	private AgentSet<ClusterNode> children = null
 	private AgentSet<ClusterNode> base = null
-	private RateLimiter limiter = null
+	private ClusterRateLimiter limiter = null
 
 	@Setup
 	def setup() {
@@ -36,8 +36,7 @@ class ClusterNode extends ReLogoTurtle {
 		color = yellow()
 		size = getRelSize()
 
-		int myShare = spread(clusterId, clusterQuota, clusterSize)
-		limiter = createRateLimiter(myShare)
+		limiter = createRateLimiter(clusterQuota, clusterId, clusterSize)
 	}
 
 	public void clusterInit(int clusterId, int clusterSize) {
@@ -58,11 +57,11 @@ class ClusterNode extends ReLogoTurtle {
 		]
 	}
 
-	private RateLimiter createRateLimiter(long rps) {
-		if (rps < 1) {
-			RateLimiters.NEVER
+	private ClusterRateLimiter createRateLimiter(long clusterQuota, long clusterId, long clusterSize) {
+		if (clusterQuota < 1) {
+			ClusterRateLimiters.NEVER
 		} else {
-			TreeFillRateLimiter treefill = new TreeFillRateLimiter(rps, clusterId, clusterSize, tree, messageSource)
+			TreeFillClusterRateLimiter treefill = new TreeFillClusterRateLimiter(clusterQuota, clusterId, clusterSize, tree, messageSource)
 			treefillSink = treefill
 			treefill
 		}
