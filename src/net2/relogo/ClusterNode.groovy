@@ -61,8 +61,8 @@ class ClusterNode extends ReLogoTurtle {
 		if (clusterQuota < 1) {
 			ClusterRateLimiters.NEVER
 		} else {
-			TreeFillClusterRateLimiter treefill = new TreeFillClusterRateLimiter(clusterQuota, clusterId, clusterSize, tree, messageSource)
-			treefillSink = treefill
+			TreeFillClusterRateLimiter treefill = new TreeFillClusterRateLimiter(clusterQuota, clusterId, clusterSize, tree, treefillMessageSource)
+			treefillMessageSink = treefill
 			treefill
 		}
 	}
@@ -73,18 +73,18 @@ class ClusterNode extends ReLogoTurtle {
 		}.first()
 	}
 
-	TurtleMessageSource<ClusterNode> messageSource = new TurtleMessageSource<>("treefillMessage", clusterNodeResolver)
-
-	MessageSink treefillSink = { Message message ->
+	MessageSink defaultMessageSink = { Message message ->
 		show([
 			"received a message to default sink",
 			message
 		])
 	}
 
-	// equivalent to an rpc endpoint
-	public treefillMessage(ReLogoTurtle src, ReLogoTurtle dst, Message message) {
-		treefillSink.receive(message)
+	TurtleMessageSource<ClusterNode> treefillMessageSource = new TurtleMessageSource<>("treefillMessageEndpoint", clusterNodeResolver)
+	MessageSink treefillMessageSink = defaultMessageSink;
+	public treefillMessageEndpoint(ReLogoTurtle src, ReLogoTurtle dst, Message message) {
+		// this method is equivalent to an rpc endpoint
+		treefillMessageSink.receive(message)
 	}
 
 
