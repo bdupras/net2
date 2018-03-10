@@ -20,7 +20,9 @@ class Utils {
 		// origin are maximums based on RLWorldDimensions#getOrigin() which returns negated minXPcor,minYPcor
 		double x = origin[0] - (((dims[0]-1)) * rel[0])
 		double y = origin[1] - (((dims[1]-1)) * rel[1])
-		[x, y]
+		double a = rel[2]
+		double r = rel[3] * dims[0]
+		[x, y, a, r]
 	}
 
 	public static Double convertTimeUnitsToTicks(Amount timeUnitsToConvert) {
@@ -37,6 +39,8 @@ class Utils {
 			return Utils.getTickCount() * 1_000_000
 		}
 	};
+	
+	public static final Random RELOGO_RANDOM = new Random(0xDEADBEEF);
 
 	private static ForkedRateLimiter simRateLimiter = ForkedRateLimiter.create(1_000);
 	

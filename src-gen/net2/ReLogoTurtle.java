@@ -1245,5 +1245,26 @@ public class ReLogoTurtle extends BaseTurtle{
 		repast.simphony.relogo.ReLogoModel.getInstance().setModelParam("clusterQuota",value);
 	}
 
+	/**
+	 * Returns the value of the global variable randSeed.
+	 *
+	 * @return the value of the global variable randSeed
+	 */
+	@ReLogoBuilderGeneratedFor("global: randSeed")
+	public Object getRandSeed(){
+		return repast.simphony.relogo.ReLogoModel.getInstance().getModelParam("randSeed");
+	}
+
+	/**
+	 * Sets the value of the global variable randSeed.
+	 *
+	 * @param value
+	 *            a value
+	 */
+	@ReLogoBuilderGeneratedFor("global: randSeed")
+	public void setRandSeed(Object value){
+		repast.simphony.relogo.ReLogoModel.getInstance().setModelParam("randSeed",value);
+	}
+
 
 }

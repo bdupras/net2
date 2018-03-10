@@ -41,7 +41,7 @@ class Packet extends ReLogoTurtle {
 		dist = distance(dst)
 		moveBy = dist / latency
 		sent = true
-		createLinkWith(src)
+		createLinkWith(src).setColor(color)
 		face(dst)
 		this
 	}

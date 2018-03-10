@@ -4,7 +4,7 @@ import repast.simphony.relogo.factories.AbstractReLogoGlobalsAndPanelFactory
 
 public class UserGlobalsAndPanelFactory extends AbstractReLogoGlobalsAndPanelFactory{
 	public void addGlobalsAndPanelComponents(){
-		addSliderWL("simulationMaxTps", "Sim Speed Max Ticks/Sec", 0, 1, 1_000, 500)
+		addSliderWL("simulationMaxTps", "Sim Speed Max Ticks/Sec", 0, 1, 1_000, 60)
 		addChooserWL("limitStrategy", "Rate Limiter", [
 			"none", 
 			"non-cooperative optimistic", 
@@ -12,9 +12,10 @@ public class UserGlobalsAndPanelFactory extends AbstractReLogoGlobalsAndPanelFac
 			"treefill"
 			], 0)
 		
-		addSliderWL("clientRps", "Gen Requests per Second", 0, 100, 10_000, 1_000)
+		addSliderWL("clientRps", "Gen Requests per Second", 0, 100, 10_000, 700)
 		addSliderWL("clientIpr", "Gen Items per Request", 1, 1, 100, 1)
 		addSliderWL("clusterQuota", "Quota (Items per Second)", 0, 100, 10_000, 1_000)
+		addSliderWL("randSeed", "Random Seed", 0, 1, 1_000, 500)
 		
 		/**
 		 * Place custom panels and globals below, for example:

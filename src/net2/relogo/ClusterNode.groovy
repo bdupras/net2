@@ -8,7 +8,7 @@ import static com.duprasville.limiters.util.Utils.*
 import com.duprasville.limiters.ClusterRateLimiters
 import com.duprasville.limiters.treefill.TreeFillClusterRateLimiter
 import com.duprasville.limiters.ClusterRateLimiter
-import com.duprasville.limiters.util.karytree.KaryLayout
+import com.duprasville.limiters.vizualization.KaryNodeAppearance
 import com.duprasville.limiters.util.karytree.KaryTree
 import com.duprasville.limiters.comms.Message
 import com.duprasville.limiters.comms.MessageSink
@@ -24,7 +24,7 @@ class ClusterNode extends ReLogoTurtle {
 	private long clusterId = -1
 	private long clusterSize = -1
 	private KaryTree tree = null
-	private KaryLayout layout = null
+	private KaryNodeAppearance appearance = null
 	private AgentSet<ClusterNode> parent = null
 	private AgentSet<ClusterNode> children = null
 	private AgentSet<ClusterNode> base = null
@@ -43,25 +43,24 @@ class ClusterNode extends ReLogoTurtle {
 		this.clusterId = clusterId
 		this.clusterSize = clusterSize
 		this.tree = KaryTree.byMinCapacity(5, (long)clusterSize)
-		this.layout = new KaryLayout(tree)
+		this.appearance = new KaryNodeAppearance(tree)
 	}
 
 	public double getRelSize() {
-		layout.relSize(clusterId)
+		appearance.relSize(clusterId)
 	}
 
 	public double[] getRelCor() {
-		[
-			layout.relX(clusterId),
-			layout.relY(clusterId)
-		]
+		appearance.relXY(clusterId)
+//		appearance.relXYtree(clusterId)
+//		appearance.relXYcirc(clusterId)
 	}
 
 	private ClusterRateLimiter createRateLimiter(long clusterQuota, long clusterId, long clusterSize) {
 		if (clusterQuota < 1) {
 			ClusterRateLimiters.NEVER
 		} else {
-			TreeFillClusterRateLimiter treefill = new TreeFillClusterRateLimiter(clusterQuota, clusterId, clusterSize, tree, treefillMessageSource)
+			TreeFillClusterRateLimiter treefill = new TreeFillClusterRateLimiter(clusterQuota, clusterId, clusterSize, tree, treefillMessageSource, RELOGO_TICKER) //, RELOGO_RANDOM)
 			treefillMessageSink = treefill
 			treefill
 		}
